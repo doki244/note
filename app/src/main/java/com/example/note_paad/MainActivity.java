@@ -18,7 +18,10 @@ import com.example.note_paad.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
+    NoteDataAccess access = new NoteDataAccess(this);
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -35,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
+        access.openDB();
+        access.addNewNote(new note_modle("2","text",new Date().getTime()+"","title"));
+        note_modle a = access.getnote("1");
+        access.closeDB();
+        System.out.println(a);
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
