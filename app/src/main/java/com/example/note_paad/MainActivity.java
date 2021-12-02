@@ -1,7 +1,9 @@
 package com.example.note_paad;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,11 +12,12 @@ import android.util.Log;
 import android.view.View;
 
 
-import com.example.note_paad.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,23 +25,36 @@ public class MainActivity extends AppCompatActivity {
 
    // private AppBarConfiguration appBarConfiguration;
     //private ActivityMainBinding binding;
-
+    FloatingActionButton add_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_main);
-
+        add_btn= findViewById(R.id.fab);
+        add_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),CreatNoteActivity.class);
+                startActivity(intent);
+            }
+        });
         //setSupportActionBar(binding.toolbar);
 
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 //        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         access.openDB();
-        access.addNewNote(new note_modle("2","text",new Date().getTime()+"","title"));
-        note_modle a = access.getnote("1");
+        access.addNewNote(new note_modle("2","text",new Date().getTime()+"","title","sub",null));
+        ArrayList<note_modle> ee = access.getall();
+        for (note_modle aaa: ee) {
+            Log.i("pring", aaa.toString());
+        }
+        access.deleteBYid(1+"");
+        for (note_modle aaa: ee) {
+            Log.i("pring", aaa.toString());
+        }
         access.closeDB();
-        System.out.println(a);
 //        binding.fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

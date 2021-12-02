@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="@dimen/_150sdp" android:layout_height="@dimen/_40sdp" android:background="#636262">
+    <ImageView android:id="@+id/record_stop" android:layout_width="@dimen/_35sdp" android:layout_height="@dimen/_35sdp" android:layout_centerVertical="true" android:layout_marginStart="@dimen/_5sdp" android:src="@drawable/ic_stop"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toEndOf="@id/record_stop" android:layout_centerVertical="true" android:layout_toStartOf="@id/close" android:layout_marginStart="@dimen/_10sdp" android:layout_marginEnd="@dimen/_10sdp">
+        <!--         <TextView -->
+        <!--             android:id="@+id/hour" -->
+        <!--             android:layout_width="wrap_content" -->
+        <!--             android:layout_height="wrap_content" -->
+        <!--             android:layout_centerVertical="true" -->
+        <!--             android:text="10" -->
+        <!--             android:layout_weight="1" -->
+        <!--             android:textSize="@dimen/_20ssp" -->
+        <!--             /> -->
+        <!--         <TextView -->
+        <!--             android:id="@+id/aa" -->
+        <!--             android:layout_width="wrap_content" -->
+        <!--             android:layout_height="wrap_content" -->
+        <!--             android:text=":" -->
+        <!--             android:layout_centerVertical="true" -->
+        <!--             android:layout_toEndOf="@id/hour" -->
+        <!--             android:layout_weight="1" -->
+        <!--             android:textSize="@dimen/_20ssp" -->
+        <!--             /> -->
+        <!--         android:layout_toEndOf="@id/aa" -->
+        <TextView android:id="@+id/min" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="10" android:layout_centerVertical="true" android:textSize="@dimen/_15ssp" android:textAlignment="center" android:layout_weight="1" android:textColor="#500F0F"/>
+        <TextView android:id="@+id/bb" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_toEndOf="@id/min" android:text=":" android:layout_weight="1" android:textSize="@dimen/_15ssp" android:textAlignment="center" android:textColor="#500F0F"/>
+        <TextView android:id="@+id/second" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toEndOf="@id/bb" android:text="10" android:layout_weight="1" android:layout_centerVertical="true" android:textSize="@dimen/_15ssp" android:textAlignment="center" android:textColor="#500F0F"/>
+    </LinearLayout>
+    <ImageView android:id="@+id/close" android:layout_width="@dimen/_30sdp" android:layout_height="@dimen/_30sdp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_marginEnd="@dimen/_5sdp" android:src="@drawable/ic_close"/>
+</RelativeLayout>

@@ -10,8 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Note_paad">
         <activity
+            android:name=".CreatNoteActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/app_name"
             android:theme="@style/Theme.Note_paad.NoActionBar">
             <intent-filter>
