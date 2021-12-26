@@ -2,6 +2,7 @@ package com.example.note_paad;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -33,8 +34,10 @@ public class CreatNoteActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (save())
-                    finish();
+                if (save()){
+                    onBackPressed();
+                }
+
             }
         });
     }
@@ -51,5 +54,14 @@ public class CreatNoteActivity extends AppCompatActivity {
         access.addNewNote(new note_modle(null,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),null));
         access.closeDB();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(CreatNoteActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 }

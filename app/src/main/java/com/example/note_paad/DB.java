@@ -10,7 +10,7 @@ import java.sql.Blob;
 
 public class DB extends SQLiteOpenHelper {
     public static final String DB_NAME = "note.db";
-    public static final int DB_VERSION =4;
+    public static final int DB_VERSION =5;
     //user table
     public static final String TABLE_NOTE = "notes";
     public static final String ID = "id";

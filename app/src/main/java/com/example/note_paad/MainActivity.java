@@ -7,6 +7,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.View;
@@ -22,10 +24,12 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     NoteDataAccess access = new NoteDataAccess(this);
-
+    private RecyclerView recyclerView;
    // private AppBarConfiguration appBarConfiguration;
     //private ActivityMainBinding binding;
     FloatingActionButton add_btn;
+    ArrayList<note_modle> ee;
+    adapter ada ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,23 +41,22 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),CreatNoteActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
+        recyclerView = findViewById(R.id.notesRecyclerView);
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));///////
+        ee= new ArrayList<>();
         //setSupportActionBar(binding.toolbar);
 
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 //        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         access.openDB();
-        access.addNewNote(new note_modle("2","text",new Date().getTime()+"","title","sub",null));
-        ArrayList<note_modle> ee = access.getall();
-        for (note_modle aaa: ee) {
-            Log.i("pring", aaa.toString());
-        }
-        access.deleteBYid(1+"");
-        for (note_modle aaa: ee) {
-            Log.i("pring", aaa.toString());
-        }
+        //access.addNewNote(new note_modle("2","text",new Date().getTime()+"","title","sub",null));
+         ee = access.getall();
+         ada = new adapter(ee);
+         recyclerView.setAdapter(ada);
         access.closeDB();
 //        binding.fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
