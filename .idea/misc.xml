@@ -9,16 +9,18 @@
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/ic_back.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/ic_done.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/ic_mic.xml" value="0.1680921052631579" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/ic_play.xml" value="0.10986842105263157" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/ic_search.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/mic.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/note_back.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/search_background.xml" value="0.11447368421052631" />
-        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_creat_note.xml" value="0.2" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_creat_note.xml" value="0.19352290679304898" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_draw.xml" value="0.15789473684210525" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/content_main.xml" value="0.264" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/fragment_first.xml" value="0.13072916666666667" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/items.xml" value="0.15789473684210525" />
-        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/mic_control.xml" value="0.15789473684210525" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/mic_control.xml" value="0.72" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/menu/menu_main.xml" value="0.13072916666666667" />
       </map>
     </option>

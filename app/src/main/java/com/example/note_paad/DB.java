@@ -10,11 +10,11 @@ import java.sql.Blob;
 
 public class DB extends SQLiteOpenHelper {
     public static final String DB_NAME = "note.db";
-    public static final int DB_VERSION =5;
+    public static final int DB_VERSION =6;
     //user table
     public static final String TABLE_NOTE = "notes";
     public static final String ID = "id";
-    public static final String IMG_PATH = "image";
+    public static final String DRAW = "draw";
     public static final String TITLE = "title";
     public static final String SUBTITLE = "subtitle";
     public static final String TEXT = "text";
@@ -30,14 +30,13 @@ public class DB extends SQLiteOpenHelper {
         String query  = "CREATE TABLE IF NOT EXISTS " + TABLE_NOTE + " ( " +
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " +
                 TITLE + " TEXT , " +
-                IMG_PATH + " TEXT , " +
+                DRAW + " BLOB , " +
                 SUBTITLE + " TEXT , " +
                 TIME + " TEXT NOT NULL UNIQUE , " +
                 TEXT + " TEXT , " +
                 VOICE_PATH + " TEXT )";
 
         sqLiteDatabase.execSQL(query);
-
     }
 
     @Override

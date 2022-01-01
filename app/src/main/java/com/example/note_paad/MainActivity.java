@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),CreatNoteActivity.class);
+                Intent intent = new Intent(view.getContext(),draw.class);
                 startActivity(intent);
                 finish();
             }
@@ -85,6 +85,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }
