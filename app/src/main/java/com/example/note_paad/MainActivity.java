@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
    // private AppBarConfiguration appBarConfiguration;
     //private ActivityMainBinding binding;
     FloatingActionButton add_btn;
-    ArrayList<note_modle> ee;
+    public static ArrayList<note_modle> notes;
     adapter ada ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +39,14 @@ public class MainActivity extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),draw.class);
+                Intent intent = new Intent(view.getContext(),CreatNoteActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
         recyclerView = findViewById(R.id.notesRecyclerView);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));///////
-        ee= new ArrayList<>();
+        notes= new ArrayList<>();
         //setSupportActionBar(binding.toolbar);
 
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         access.openDB();
         //access.addNewNote(new note_modle("2","text",new Date().getTime()+"","title","sub",null));
-         ee = access.getall();
-         ada = new adapter(ee);
+        notes = access.getall();
+         ada = new adapter(notes);
          recyclerView.setAdapter(ada);
         access.closeDB();
 //        binding.fab.setOnClickListener(new View.OnClickListener() {

@@ -1,13 +1,22 @@
 package com.example.note_paad;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
+import com.afollestad.materialdialogs.MaterialDialog;
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -17,8 +26,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -30,6 +42,16 @@ public class CreatNoteActivity extends AppCompatActivity {
     private ImageView mic_play;
     private ImageView mic_stop;
     private ImageView mic_close;
+    private ImageView image;
+    private ImageView drawi;
+    private ImageView add_img;
+    View view ;
+    private static final int SELECT_PHOTO = 1;
+    private static final int CAPTURE_PHOTO = 2;
+    private Bitmap thumbnail;
+    private Handler progressBarbHandler = new Handler();
+    private ImageView drawing;
+    private int progressBarStatus;
     RelativeLayout mic_control;
     AudioRecorder recorder;
     String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -44,9 +66,16 @@ public class CreatNoteActivity extends AppCompatActivity {
         title = findViewById(R.id.inputNoteTitle);
         mic_open = findViewById(R.id.mic);
         mic_control = findViewById(R.id.mic_control);
+        drawing = findViewById(R.id.draw);
         mic_play = findViewById(R.id.record_start);
         mic_close = findViewById(R.id.close);
+        drawi = findViewById(R.id.drawi);
+        view = findViewById(R.id.view);
+        view.setVisibility(View.GONE);
+        drawi.setVisibility(View.GONE);
         mic_stop = findViewById(R.id.record_stop);
+        image = findViewById(R.id.image);
+        add_img = findViewById(R.id.add_image);
         subtite = findViewById(R.id.inputNoteSubtitle);
         notetext = findViewById(R.id.inputNote);
         time = findViewById(R.id.textDateTime);
@@ -111,7 +140,7 @@ public class CreatNoteActivity extends AppCompatActivity {
                 }
             }
         });
-    mic_close.setOnClickListener(new View.OnClickListener() {
+        mic_close.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             mic_stop.setVisibility(View.GONE);
@@ -124,7 +153,44 @@ public class CreatNoteActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    });}
+    });
+        drawing.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(view.getContext(),draw.class);
+            startActivity(intent);
+            setProgressBar();
+        }
+    });
+        add_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(view.getContext())
+                        .setTitle("set your image")
+                        .setPositiveButton("gallery", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                                photoPickerIntent.setType("image/*");
+                                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton("camera", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(intent, CAPTURE_PHOTO);
+                            }
+                        })
+                        .setIcon(R.drawable.addimage)
+                        .show();
+                image.setDrawingCacheEnabled(true);
+                image.buildDrawingCache();
+
+            }
+        });
+
+    }
 
 
     private boolean save(){
@@ -135,11 +201,21 @@ public class CreatNoteActivity extends AppCompatActivity {
             Toast.makeText(this, "note cant be empty", Toast.LENGTH_SHORT).show();
             return false;
         }
+        byte[] imagee =null;
+        try {
+            Bitmap bitmap = image.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+            imagee = baos.toByteArray();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         access.openDB();
         if (flag)
-            access.addNewNote(new note_modle(mFileName,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),null));
+            access.addNewNote(new note_modle(mFileName,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
         else
-            access.addNewNote(new note_modle(null,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),null));
+            access.addNewNote(new note_modle(null,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
         access.closeDB();
         return true;
     }
@@ -174,8 +250,83 @@ public class CreatNoteActivity extends AppCompatActivity {
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
+    }
+    private void onCaptureImageResult(Intent data) {
+        thumbnail = (Bitmap) data.getExtras().get("data");
+
+        //set Progress Bar
+        setProgressBar();
+        //set profile picture form camera
+        //image.setMaxWidth(100);
+        image.setImageBitmap(thumbnail);
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == SELECT_PHOTO){
+            if(resultCode == RESULT_OK) {
+                try {
+                    final Uri imageUri = data.getData();
+                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+                    setProgressBar();
+                    //set profile picture form gallery
+                    image.setImageBitmap(selectedImage);
+
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }else if(requestCode == CAPTURE_PHOTO){
+            if(resultCode == RESULT_OK) {
+                onCaptureImageResult(data);
+            }
+        }
+    }
+    public void setProgressBar(){
+        ProgressDialog progressBar = new ProgressDialog(this);
+        progressBar.setCancelable(true);
+        progressBar.setMessage("Please wait...");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.setProgress(0);
+        progressBar.setMax(100);
+        progressBar.show();
+         progressBarStatus = 0;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (progressBarStatus < 100){
+                    progressBarStatus += 30;
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    progressBarbHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setProgress(progressBarStatus);
+                        }
+                    });
+                }
+                if (progressBarStatus >= 100) {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    progressBar.dismiss();
+                }
+
+            }
+        }).start();
     }
 }

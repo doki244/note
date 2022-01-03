@@ -16,6 +16,7 @@ public class DB extends SQLiteOpenHelper {
     public static final String ID = "id";
     public static final String DRAW = "draw";
     public static final String TITLE = "title";
+    public static final String IMG = "img";
     public static final String SUBTITLE = "subtitle";
     public static final String TEXT = "text";
     public static final String TIME = "time";
@@ -31,6 +32,7 @@ public class DB extends SQLiteOpenHelper {
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " +
                 TITLE + " TEXT , " +
                 DRAW + " BLOB , " +
+                IMG + " BLOB , " +
                 SUBTITLE + " TEXT , " +
                 TIME + " TEXT NOT NULL UNIQUE , " +
                 TEXT + " TEXT , " +

@@ -6,6 +6,7 @@
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable-v24/ic_stop.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/background_done.xml" value="0.11447368421052631" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/background_subtitle.xml" value="0.11447368421052631" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/circle.xml" value="0.11644736842105263" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/ic_back.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/ic_done.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/ic_mic.xml" value="0.1680921052631579" />
@@ -14,8 +15,10 @@
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/mic.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/note_back.xml" value="0.1680921052631579" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/search_background.xml" value="0.11447368421052631" />
-        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_creat_note.xml" value="0.19352290679304898" />
-        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_draw.xml" value="0.15789473684210525" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/tool.xml" value="0.11644736842105263" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/drawable/white.xml" value="0.11348684210526316" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_creat_note.xml" value="0.144" />
+        <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_draw.xml" value="0.152" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/content_main.xml" value="0.264" />
         <entry key="..\:/work/code/android/note_paad/app/src/main/res/layout/fragment_first.xml" value="0.13072916666666667" />

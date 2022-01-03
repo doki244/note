@@ -5,17 +5,30 @@ import androidx.annotation.Nullable;
 public class note_modle {
     private String voice_path,text,time,title,subtitle;
     private int id;
-    private byte[] image;
+    private byte[] image , draw;
 
-    public note_modle(@Nullable String voice_path, String text, String time, String title,@Nullable String subtitle,@Nullable byte[] image) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public byte[] getDraw() {
+        return draw;
+    }
+
+    public void setDraw(byte[] draw) {
+        this.draw = draw;
+    }
+
+    public note_modle(@Nullable String voice_path, String text, String time, String title, @Nullable String subtitle, @Nullable byte[] image, @Nullable byte[] draw) {
         this.voice_path = voice_path;
         this.text = text;
         this.time = time;
         this.title = title;
         this.subtitle = subtitle;
         this.image = image;
+        this.draw = draw;
     }
-    public note_modle(@Nullable String voice_path, String text, String time, String title,@Nullable String subtitle, @Nullable byte[] image, int id) {
+    public note_modle(@Nullable String voice_path, String text, String time, String title,@Nullable String subtitle, @Nullable byte[] image, int id,@Nullable byte[] draw) {
         this.voice_path = voice_path;
         this.text = text;
         this.time = time;
@@ -23,6 +36,7 @@ public class note_modle {
         this.subtitle = subtitle;
         this.id = id;
         this.image = image;
+        this.draw = draw;
     }
     public int getId() {
         return id;

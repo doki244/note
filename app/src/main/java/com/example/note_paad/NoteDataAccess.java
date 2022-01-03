@@ -31,13 +31,15 @@ public class NoteDataAccess {
             String TIME=model.getTime();
             String  TEXT=model.getText();
             byte[] image =model.getImage();
+            byte[] draw =model.getDraw();
             String VOICE_PATH = model.getVoice_path();
             ContentValues cv = new ContentValues();
             cv.put(DB.TITLE,TITLE);
             cv.put(DB.TEXT,TEXT);
             cv.put(DB.SUBTITLE,SUBTITLE);
             cv.put(DB.TIME,TIME);
-            cv.put(DB.DRAW,image);
+            cv.put(DB.DRAW,draw);
+            cv.put(DB.IMG,image);
             cv.put(DB.VOICE_PATH,VOICE_PATH);
             database.insert(DB.TABLE_NOTE,null,cv);
             return true;
@@ -53,6 +55,7 @@ public class NoteDataAccess {
         int idd;
         String TIME;
         byte[] image;
+        byte[] draw;
         String  TEXT;
         String VOICE_PATH;
         String query = "SELECT * FROM " + DB.TABLE_NOTE + " where id ='" + id + "'";
@@ -63,9 +66,10 @@ public class NoteDataAccess {
             TEXT = cursor.getString(cursor.getColumnIndex(DB.TEXT));
             VOICE_PATH = cursor.getString(cursor.getColumnIndex(DB.VOICE_PATH));
             SUBTITLE = cursor.getString(cursor.getColumnIndex(DB.SUBTITLE));
-            image = cursor.getBlob(cursor.getColumnIndex(DB.DRAW));
+            draw = cursor.getBlob(cursor.getColumnIndex(DB.DRAW));
+            image = cursor.getBlob(cursor.getColumnIndex(DB.IMG));
             TITLE = cursor.getString(cursor.getColumnIndex(DB.TITLE));
-            return new note_modle(VOICE_PATH,TEXT,TIME,TITLE,SUBTITLE,image,idd);
+            return new note_modle(VOICE_PATH,TEXT,TIME,TITLE,SUBTITLE,image,idd,draw);
         }
         else{
             return null;
@@ -78,6 +82,7 @@ public class NoteDataAccess {
         int idd;
         String TIME;
         byte[] image;
+        byte[] draw;
         String  TEXT;
         String VOICE_PATH;
         ArrayList<note_modle> arrayList = new ArrayList<>();
@@ -90,9 +95,10 @@ public class NoteDataAccess {
                 TEXT = cursor.getString(cursor.getColumnIndex(DB.TEXT));
                 VOICE_PATH = cursor.getString(cursor.getColumnIndex(DB.VOICE_PATH));
                 SUBTITLE = cursor.getString(cursor.getColumnIndex(DB.SUBTITLE));
-                image = cursor.getBlob(cursor.getColumnIndex(DB.DRAW));
+                draw = cursor.getBlob(cursor.getColumnIndex(DB.DRAW));
+                image = cursor.getBlob(cursor.getColumnIndex(DB.IMG));
                 TITLE = cursor.getString(cursor.getColumnIndex(DB.TITLE));
-                arrayList.add(new note_modle(VOICE_PATH,TEXT,TIME,TITLE,SUBTITLE,image,idd));
+                arrayList.add(new note_modle(VOICE_PATH,TEXT,TIME,TITLE,SUBTITLE,image,idd,draw));
 
             }while (cursor.moveToNext());
         }
