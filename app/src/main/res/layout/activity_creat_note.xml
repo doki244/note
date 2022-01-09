@@ -156,45 +156,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/LinearLayout"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:adjustViewBounds="true"
+                android:weightSum="2"
 
                 app:layout_constraintTop_toBottomOf="@+id/inputNoteSubtitle">
 
 
                 <ImageView
                     android:id="@+id/image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_200sdp"
                     android:adjustViewBounds="true"
+                    android:layout_weight="1"
                     android:visibility="visible"/>
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:background="#131313"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/image" />
+
 
                 <ImageView
                     android:id="@+id/drawi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_200sdp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
                     android:adjustViewBounds="true"
                     android:visibility="visible"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:background="#131313"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/drawi" />
+
 
             </LinearLayout>
              <EditText

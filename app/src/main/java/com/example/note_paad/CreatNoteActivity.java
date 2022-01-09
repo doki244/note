@@ -14,14 +14,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +37,8 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class CreatNoteActivity extends AppCompatActivity {
     private EditText title,subtite,notetext;
@@ -45,12 +50,17 @@ public class CreatNoteActivity extends AppCompatActivity {
     private ImageView image;
     private ImageView drawi;
     private ImageView add_img;
-    View view ;
+    private TextView min_view;
+    private TextView sec_view;
+    long startTime, timeInMilliseconds = 0;
+    Handler customHandler = new Handler();
+    //View view ;
     private static final int SELECT_PHOTO = 1;
     private static final int CAPTURE_PHOTO = 2;
     private Bitmap thumbnail;
     private Handler progressBarbHandler = new Handler();
     private ImageView drawing;
+    private LinearLayout LinearLayout;
     private int progressBarStatus;
     RelativeLayout mic_control;
     AudioRecorder recorder;
@@ -68,11 +78,15 @@ public class CreatNoteActivity extends AppCompatActivity {
         mic_control = findViewById(R.id.mic_control);
         drawing = findViewById(R.id.draw);
         mic_play = findViewById(R.id.record_start);
+        min_view = findViewById(R.id.min);
+        sec_view = findViewById(R.id.second);
         mic_close = findViewById(R.id.close);
+        LinearLayout = findViewById(R.id.LinearLayout);
         drawi = findViewById(R.id.drawi);
-        view = findViewById(R.id.view);
-        view.setVisibility(View.GONE);
+       // view = findViewById(R.id.view);
+        //view.setVisibility(View.GONE);
         drawi.setVisibility(View.GONE);
+        LinearLayout.setVisibility(View.GONE);
         mic_stop = findViewById(R.id.record_stop);
         image = findViewById(R.id.image);
         add_img = findViewById(R.id.add_image);
@@ -119,8 +133,10 @@ public class CreatNoteActivity extends AppCompatActivity {
                 recorder =new AudioRecorder(mFileName);
                 try {
 
-
-                    recorder.start();
+                    mFileName=null;
+                    mFileName = recorder.start();
+                    start();
+                    Log.i("mFileName", mFileName);
                     flag=true;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -135,6 +151,8 @@ public class CreatNoteActivity extends AppCompatActivity {
                 mic_control.setVisibility(View.GONE);
                 try {
                     recorder.stop();
+                    stop();
+                    recorder=null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -186,6 +204,8 @@ public class CreatNoteActivity extends AppCompatActivity {
                         .show();
                 image.setDrawingCacheEnabled(true);
                 image.buildDrawingCache();
+
+
 
             }
         });
@@ -260,6 +280,7 @@ public class CreatNoteActivity extends AppCompatActivity {
         //set profile picture form camera
         //image.setMaxWidth(100);
         image.setImageBitmap(thumbnail);
+        LinearLayout.setVisibility(View.VISIBLE);
 
     }
     @Override
@@ -276,6 +297,7 @@ public class CreatNoteActivity extends AppCompatActivity {
                     setProgressBar();
                     //set profile picture form gallery
                     image.setImageBitmap(selectedImage);
+                    LinearLayout.setVisibility(View.VISIBLE);
 
 
                 } catch (FileNotFoundException e) {
@@ -329,4 +351,54 @@ public class CreatNoteActivity extends AppCompatActivity {
             }
         }).start();
     }
+    public static String getDateFromMillis(long d) {
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return df.format(d);
+    }
+
+    public void start() {
+        startTime = SystemClock.uptimeMillis();
+        customHandler.postDelayed(updateTimerThread, 0);
+    }
+
+    public void stop() {
+        customHandler.removeCallbacks(updateTimerThread);
+    }
+
+    private Runnable updateTimerThread = new Runnable() {
+        public void run() {
+            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+            int min = (int) TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds);
+            int sec = (int) (TimeUnit.MILLISECONDS.toSeconds(timeInMilliseconds) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMilliseconds)));
+            //Log.i("dorrr", min+"  "+sec);
+            min_view.setText(min+"");
+            sec_view.setText(sec+"");
+            //min_view.setText(getDateFromMillis(timeInMilliseconds));
+            customHandler.postDelayed(this, 1000);
+        }
+    };
 }
+//abstract class CountUpTimer extends CountDownTimer {
+//    private static final long INTERVAL_MS = 1000;
+//    private final long duration;
+//
+//    protected CountUpTimer(long durationMs) {
+//        super(durationMs, INTERVAL_MS);
+//        this.duration = durationMs;
+//    }
+//
+//    public abstract void onTick(int second);
+//
+//    @Override
+//    public void onTick(long msUntilFinished) {
+//        int second = (int) ((duration - msUntilFinished) / 1000);
+//        onTick(second);
+//    }
+//
+//    @Override
+//    public void onFinish() {
+//        onTick(duration / 1000);
+//    }
+//}

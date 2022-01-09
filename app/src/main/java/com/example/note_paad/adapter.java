@@ -15,13 +15,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class adapter extends RecyclerView.Adapter<adapter.holder> {
-    private List<note_modle> notes;
+    private ArrayList<note_modle> notes;
 
 
-    public adapter(List<note_modle> notes) {
+    public adapter(ArrayList<note_modle> notes) {
         this.notes = notes;
     }
 
@@ -61,6 +62,13 @@ public class adapter extends RecyclerView.Adapter<adapter.holder> {
 
         return position;
 
+    }
+    public void n_() {
+        notes = new ArrayList<note_modle>();
+
+        //this.messages.add(new Message("salam"));
+        notifyDataSetChanged();
+        // to render the list we need to notify
     }
 
     static class holder extends RecyclerView.ViewHolder{

@@ -1,17 +1,25 @@
 package com.example.note_paad;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.util.Log;
+
 
 public class AudioRecorder {
 
     final MediaRecorder recorder = new MediaRecorder();
     public final String path;
-
+    int duration ;
+    MediaPlayer mp;
     public AudioRecorder(String path) {
         this.path = sanitizePath(path);
     }
@@ -27,7 +35,7 @@ public class AudioRecorder {
                 + path;
     }
 
-    public void start() throws IOException {
+    public String start() throws IOException {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
             throw new IOException("SD Card is not mounted.  It is " + state
@@ -46,6 +54,7 @@ public class AudioRecorder {
         recorder.setOutputFile(path);
         recorder.prepare();
         recorder.start();
+        return path;
     }
 
     public void stop() throws IOException {
@@ -54,10 +63,53 @@ public class AudioRecorder {
     }
 
     public void playarcoding(String path) throws IOException {
-        MediaPlayer mp = new MediaPlayer();
-        mp.setDataSource(path);
-        mp.prepare();
-        mp.start();
-        mp.setVolume(10, 10);
+        mp = new MediaPlayer();
+        FileInputStream fis = null;
+            File directory = new File(path);
+            if (directory.exists()){
+                Log.i("onCsss", "playarcoding: yess ");
+            }
+            fis = new FileInputStream(directory);
+            mp.setDataSource(fis.getFD());
+            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+            mp.setOnPreparedListener(mediaPlayer -> mediaPlayer.start());
+            mp.prepareAsync();
+        //mp.release();
+
+
+//        String time = String.format("%d min, %d sec",
+//                TimeUnit.MILLISECONDS.toMinutes(duration),
+//                TimeUnit.MILLISECONDS.toSeconds(duration) -
+//                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+        //Log.i("playarcoding", during(path)+"");
+
+
+        //mp.setVolume(10, 10);
     }
+    public int during (String path)  {
+        File yourFile =new File(path);;
+        MediaPlayer mp = new MediaPlayer();
+        FileInputStream fs;
+        FileDescriptor fd;
+        try {
+            fs = new FileInputStream(yourFile);
+            fd = fs.getFD();
+            mp.setDataSource(fd);
+            mp.prepare();
+            int length = mp.getDuration();
+            mp.release();
+            return length;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
+
+    public void stoparcoding() {
+        mp.stop();
+        //mp.setVolume(10, 10);
+    }
+
 }

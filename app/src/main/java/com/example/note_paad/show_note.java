@@ -1,18 +1,32 @@
 package com.example.note_paad;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class show_note  extends AppCompatActivity {
     private EditText title,subtite,notetext;
@@ -22,14 +36,24 @@ public class show_note  extends AppCompatActivity {
     private ImageView mic_stop;
     private ImageView image;
     private ImageView draw;
-    View view ;
+    private ImageView drawing;
+    private ImageView add_image;
+    private TextView min_view;
+    private TextView sec_view;
+
+    LinearLayout linearLayout ;
+    public static Bitmap img;
+    //View view ;
     private ImageView mic_close;
     RelativeLayout mic_control;
     AudioRecorder recorder;
+    String mFileName = "";
     //String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
     Boolean flag =false;
     note_modle note;
+    int dur;
     NoteDataAccess access = new NoteDataAccess(this);
+    @SuppressLint("WrongThread")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,12 +63,25 @@ public class show_note  extends AppCompatActivity {
         title = findViewById(R.id.inputNoteTitle);
         title.setEnabled(false);
         mic_open = findViewById(R.id.mic);
-        view = findViewById(R.id.view);
+        //view = findViewById(R.id.view);
+        ImageView save = findViewById(R.id.imageSave);
         image = findViewById(R.id.image);
         draw = findViewById(R.id.drawi);
+        drawing = findViewById(R.id.draw);
+        drawing.setVisibility(View.GONE);
+        add_image = findViewById(R.id.add_image);
+        add_image.setVisibility(View.GONE);
+        save.setVisibility(View.GONE);
+        drawing.setVisibility(View.GONE);
         mic_control = findViewById(R.id.mic_control);
+        linearLayout = findViewById(R.id.LinearLayout);
+        linearLayout.setVisibility(View.GONE);
+        draw.setVisibility(View.GONE);
+        image.setVisibility(View.GONE);
         mic_play = findViewById(R.id.record_start);
         mic_close = findViewById(R.id.close);
+        min_view = findViewById(R.id.min);
+        sec_view = findViewById(R.id.second);
         mic_stop = findViewById(R.id.record_stop);
         subtite = findViewById(R.id.inputNoteSubtitle);
         subtite.setEnabled(false);
@@ -53,6 +90,15 @@ public class show_note  extends AppCompatActivity {
         time = findViewById(R.id.textDateTime);
         mic_control.setVisibility(View.GONE);
         mic_stop.setVisibility(View.GONE);
+
+        mic_open.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mic_control.setVisibility(View.VISIBLE);
+            }
+        });
+        mic_play.setImageResource(R.drawable.ic_play);
+
         Bundle extraas = getIntent().getExtras();
         try {
             if (extraas == null) {
@@ -68,23 +114,119 @@ public class show_note  extends AppCompatActivity {
         if (note==null){
             onBackPressed();
         }
+        mFileName = note.getVoice_path();
+
+        if (mFileName==null){
+            mic_open.setVisibility(View.GONE);
+        }else {
+            recorder =new AudioRecorder(mFileName);
+            dur = recorder.during(mFileName);
+            int min = (int) TimeUnit.MILLISECONDS.toMinutes(dur);
+            int sec = (int) (TimeUnit.MILLISECONDS.toSeconds(dur) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(dur)));
+            Log.i("dorrr", min+"  "+sec);
+            min_view.setText(min+"");
+            sec_view.setText(sec+"");
+        }
+        //Log.i("onCsss ", mFileName);
+        mic_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mic_stop.setVisibility(View.VISIBLE);
+                mic_play.setVisibility(View.GONE);
+
+                try {
+
+                    recorder.playarcoding(mFileName);
+                    new CountDownTimer(dur, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            int min = (int) TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
+                            int sec = (int) (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
+                            Log.i("dorrr", min+"  "+sec);
+                            min_view.setText(min+"");
+                            sec_view.setText(sec+"");
+
+                        }
+
+                        public void onFinish() {
+                            mic_stop.setVisibility(View.GONE);
+                            mic_play.setVisibility(View.VISIBLE);
+                            int min = (int) TimeUnit.MILLISECONDS.toMinutes(dur);
+                            int sec = (int) (TimeUnit.MILLISECONDS.toSeconds(dur) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(dur)));
+                            //Log.i("dorrr", min+"  "+sec);
+                            min_view.setText(min+"");
+                            sec_view.setText(sec+"");
+
+                        }
+
+                    }.start();
+                    flag=true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mic_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mic_stop.setVisibility(View.GONE);
+                mic_play.setVisibility(View.VISIBLE);
+                mic_control.setVisibility(View.GONE);
+                recorder.stoparcoding();
+                recorder=null;
+
+            }
+        });
+        mic_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mic_stop.setVisibility(View.GONE);
+                mic_play.setVisibility(View.VISIBLE);
+                mic_control.setVisibility(View.GONE);
+                if (recorder!=null)
+                    recorder.stoparcoding();
+            }
+        });
+
+
+
         time.setText(note.getTime());
         subtite.setText(note.getSubtitle());
         title.setText(note.getTitle());
         notetext.setText(note.getText());
-        view.setVisibility(View.GONE);
+        //view.setVisibility(View.GONE);
         if (note.getImage()!=null){
+            linearLayout.setVisibility(View.VISIBLE);
+            image.setVisibility(View.VISIBLE);
             Bitmap bitmap = BitmapFactory.decodeByteArray(note.getImage(), 0, note.getImage().length);
             image.setImageBitmap(bitmap);
-
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(show_note.this,imageview.class);
+                    img = bitmap;
+                    startActivity(intent);
+                }
+            });
         }
         if (note.getDraw()!=null){
+            linearLayout.setVisibility(View.VISIBLE);
             draw.setVisibility(View.VISIBLE);
             Bitmap bitmap = BitmapFactory.decodeByteArray(note.getDraw(), 0, note.getDraw().length);
             draw.setImageBitmap(bitmap);
+            PhotoViewAttacher pAttacher;
+            pAttacher = new PhotoViewAttacher(draw);
+            pAttacher.update();
+
+
         }
-        if (note.getDraw()!=null&&note.getImage()!=null)
-            view.setVisibility(View.VISIBLE);
+        if (note.getDraw()!=null&&note.getImage()!=null){
+            //view.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
