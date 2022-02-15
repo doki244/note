@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/colorPrimery"
+    android:id="@+id/constraint"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimery"
     tools:context=".MainActivity">
 
     <TextView
@@ -13,40 +13,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
-        android:text="@string/note_pad"
+        android:text=""
         android:textColor="@color/colorWhite"
-        android:textSize="@dimen/_20ssp"
+        android:textSize="@dimen/_5ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:theme="@style/Theme.Note_paad.AppBarOverlay">-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:theme="@style/Theme.Note_paad.AppBarOverlay">-->
 
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:background="?attr/colorPrimary"-->
-<!--            app:popupTheme="@style/Theme.Note_paad.PopupOverlay" />-->
+    <!--        <androidx.appcompat.widget.Toolbar-->
+    <!--            android:id="@+id/toolbar"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="?attr/actionBarSize"-->
+    <!--            android:background="?attr/colorPrimary"-->
+    <!--            app:popupTheme="@style/Theme.Note_paad.PopupOverlay" />-->
 
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
+    <!--    </com.google.android.material.appbar.AppBarLayout>-->
 
-<!--    <include layout="@layout/content_main" />-->
+    <!--    <include layout="@layout/content_main" />-->
 
     <LinearLayout
         android:id="@+id/layoutSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_35sdp"
         android:layout_marginBottom="1dp"
         android:background="@drawable/search_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="@dimen/_10sdp"
-        android:layout_marginLeft="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginRight="@dimen/_8sdp"
         android:paddingEnd="@dimen/_10sdp"
         app:layout_constraintBottom_toTopOf="@+id/notesRecyclerView"
         app:layout_constraintTop_toBottomOf="@+id/text">
@@ -71,7 +71,7 @@
             android:includeFontPadding="false"
             android:inputType="text"
             android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorTextHint"
+            android:textColorHint="@color/colorPrimeryDark"
             android:textSize="@dimen/_13ssp" />
     </LinearLayout>
 
@@ -95,8 +95,21 @@
         android:layout_gravity="bottom|end"
         android:layout_marginStart="@dimen/_240sdp"
         android:layout_marginBottom="@dimen/_30sdp"
+        android:backgroundTint="#e85d18
+"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/theme"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="17dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layoutSearch"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/sun" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

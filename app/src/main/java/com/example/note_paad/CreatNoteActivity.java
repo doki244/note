@@ -2,16 +2,21 @@ package com.example.note_paad;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -40,6 +45,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 public class CreatNoteActivity extends AppCompatActivity {
     private EditText title,subtite,notetext;
     private TextView time;
@@ -50,16 +57,19 @@ public class CreatNoteActivity extends AppCompatActivity {
     private ImageView image;
     private ImageView drawi;
     private ImageView add_img;
+    private ImageView remove_img;
+    private ImageView remove_draw;
     private TextView min_view;
     private TextView sec_view;
     long startTime, timeInMilliseconds = 0;
     Handler customHandler = new Handler();
-    //View view ;
     private static final int SELECT_PHOTO = 1;
     private static final int CAPTURE_PHOTO = 2;
+    static note_modle notemodle =null;
     private Bitmap thumbnail;
     private Handler progressBarbHandler = new Handler();
     private ImageView drawing;
+
     private LinearLayout LinearLayout;
     private int progressBarStatus;
     RelativeLayout mic_control;
@@ -71,6 +81,8 @@ public class CreatNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creat_note);
+
+
         ImageView ImageView = findViewById(R.id.imageBack);
         ImageView.setOnClickListener(view -> onBackPressed());
         title = findViewById(R.id.inputNoteTitle);
@@ -83,19 +95,57 @@ public class CreatNoteActivity extends AppCompatActivity {
         mic_close = findViewById(R.id.close);
         LinearLayout = findViewById(R.id.LinearLayout);
         drawi = findViewById(R.id.drawi);
+        remove_img = findViewById(R.id.remove_img);
+        remove_draw = findViewById(R.id.remove_draw);
+        remove_img.setVisibility(View.GONE);
+        remove_draw.setVisibility(View.GONE);
        // view = findViewById(R.id.view);
         //view.setVisibility(View.GONE);
+
         drawi.setVisibility(View.GONE);
         LinearLayout.setVisibility(View.GONE);
         mic_stop = findViewById(R.id.record_stop);
         image = findViewById(R.id.image);
+        image.setVisibility(View.GONE);
         add_img = findViewById(R.id.add_image);
         subtite = findViewById(R.id.inputNoteSubtitle);
         notetext = findViewById(R.id.inputNote);
         time = findViewById(R.id.textDateTime);
         mic_control.setVisibility(View.GONE);
         mic_stop.setVisibility(View.GONE);
+                if (notemodle!=null){
+            mFileName = notemodle.getVoice_path();
 
+            if (mFileName==null){
+                //mic_open.setVisibility(View.GONE);
+            }else {
+
+            }
+            time.setText(notemodle.getTime());
+            subtite.setText(notemodle.getSubtitle());
+            title.setText(notemodle.getTitle());
+            notetext.setText(notemodle.getText());
+            //view.setVisibility(View.GONE);
+            if (notemodle.getImage()!=null){
+                LinearLayout.setVisibility(View.VISIBLE);
+                image.setVisibility(View.VISIBLE);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(notemodle.getImage(), 0, notemodle.getImage().length);
+                image.setImageBitmap(bitmap);
+                remove_img.setVisibility(View.VISIBLE);
+
+            }
+            if (notemodle.getDraw()!=null){
+                LinearLayout.setVisibility(View.VISIBLE);
+                drawi.setVisibility(View.VISIBLE);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(notemodle.getDraw(), 0, notemodle.getDraw().length);
+                drawi.setImageBitmap(bitmap);
+                PhotoViewAttacher pAttacher;
+                pAttacher = new PhotoViewAttacher(drawi);
+                remove_draw.setVisibility(View.VISIBLE);
+                pAttacher.update();
+
+            }
+        }
         ActivityCompat.requestPermissions(CreatNoteActivity.this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
@@ -207,11 +257,60 @@ public class CreatNoteActivity extends AppCompatActivity {
 
 
 
+
             }
         });
+        remove_draw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                draw.draw=null;
+                drawi.setVisibility(View.GONE);
+                if (image.getVisibility()==View.GONE){
+                    LinearLayout.setVisibility(View.GONE);
+                }
+                remove_draw.setVisibility(View.GONE);
+            }
+        });
+        remove_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                image.setImageBitmap(null);
+                image.setImageResource(0);
+                image.setVisibility(View.GONE);
+                if (draw.draw==null){
+                    LinearLayout.setVisibility(View.GONE);
+                }
+                remove_img.setVisibility(View.GONE);
+            }
+        });
+        CoordinatorLayout CoordinatorLayout = findViewById(R.id.coordinator);
 
+        if (MainActivity.curent_theme==MainActivity.light_theme){
+            //linearLayout.setBackgroundColor(dark.getItem());
+            CoordinatorLayout.setBackgroundColor(MainActivity.light.getCreat_background());
+            title.setTextColor(MainActivity.light.text_color);
+            notetext.setTextColor(MainActivity.light.text_color);
+            subtite.setTextColor(MainActivity.light.text_color);
+
+        }else if (MainActivity.curent_theme==MainActivity.dark_theme){//go to light
+            CoordinatorLayout.setBackgroundColor(MainActivity.dark.getCreat_background());
+            title.setTextColor(MainActivity.dark.text_color);
+            notetext.setTextColor(MainActivity.dark.text_color);
+            subtite.setTextColor(MainActivity.dark.text_color);
+
+        }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (draw.draw!=null){
+            drawi.setVisibility(View.VISIBLE);
+            drawi.setImageBitmap(BitmapFactory.decodeByteArray(draw.draw, 0, draw.draw.length));
+            LinearLayout.setVisibility(View.VISIBLE);
+            remove_draw.setVisibility(View.VISIBLE);
+        }
+    }
 
     private boolean save(){
         if (title.getText().toString().trim().isEmpty()){
@@ -223,15 +322,20 @@ public class CreatNoteActivity extends AppCompatActivity {
         }
         byte[] imagee =null;
         try {
-            Bitmap bitmap = image.getDrawingCache();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
-            imagee = baos.toByteArray();
+            if (image.getVisibility()==View.VISIBLE){
+                Bitmap bitmap = image.getDrawingCache();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+                imagee = baos.toByteArray();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
 
         access.openDB();
+        if (notemodle!=null){
+            access.deleteBYid(notemodle.getId()+"");
+        }
         if (flag)
             access.addNewNote(new note_modle(mFileName,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
         else
@@ -245,6 +349,7 @@ public class CreatNoteActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(CreatNoteActivity.this,MainActivity.class);
         startActivity(intent);
+        notemodle = null;
         finish();
 
     }
@@ -297,7 +402,9 @@ public class CreatNoteActivity extends AppCompatActivity {
                     setProgressBar();
                     //set profile picture form gallery
                     image.setImageBitmap(selectedImage);
+                    remove_img.setVisibility(View.VISIBLE);
                     LinearLayout.setVisibility(View.VISIBLE);
+                    image.setVisibility(View.VISIBLE);
 
 
                 } catch (FileNotFoundException e) {
@@ -308,6 +415,9 @@ public class CreatNoteActivity extends AppCompatActivity {
         }else if(requestCode == CAPTURE_PHOTO){
             if(resultCode == RESULT_OK) {
                 onCaptureImageResult(data);
+                remove_img.setVisibility(View.VISIBLE);
+                LinearLayout.setVisibility(View.VISIBLE);
+                image.setVisibility(View.VISIBLE);
             }
         }
     }

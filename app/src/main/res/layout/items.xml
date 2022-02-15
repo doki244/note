@@ -4,8 +4,9 @@
     android:orientation="vertical"
     android:id="@+id/layoutNote"
     android:layout_width="match_parent"
-    android:layout_marginStart="@dimen/_12sdp"
+    android:layout_marginStart="@dimen/_11sdp"
     android:layout_marginTop="@dimen/_12sdp"
+
     android:background="@drawable/note_back"
     android:layout_height="wrap_content">
     <com.makeramen.roundedimageview.RoundedImageView
@@ -26,7 +27,7 @@
         android:layout_marginTop="@dimen/_8sdp"
 
         android:includeFontPadding="false"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorQuickActionsBackground"
         android:textSize="@dimen/_13ssp"
         />
     <TextView
@@ -38,7 +39,7 @@
         android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginBottom="@dimen/_4sdp"
         android:includeFontPadding="false"
-        android:textColor="@color/colorNoteSubtitleText"
+        android:textColor="@color/colorQuickActionsBackground"
         android:textSize="@dimen/_12ssp"
         />
 
@@ -50,7 +51,7 @@
         android:layout_marginEnd="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_8sdp"
         android:includeFontPadding="false"
-        android:textColor="@color/colorNoteSubtitleText"
+        android:textColor="@color/colorQuickActionsBackground"
         android:textSize="@dimen/_6ssp"
         />
 

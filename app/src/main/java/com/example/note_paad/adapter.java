@@ -1,7 +1,9 @@
 package com.example.note_paad;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +37,21 @@ public class adapter extends RecyclerView.Adapter<adapter.holder> {
 
     @Override
     public void onBindViewHolder(@NonNull holder holder, int position) {
+        SharedPreferences sharedPref = ((Activity)holder.itemView.getContext()).getPreferences(Context.MODE_PRIVATE);
+        if (sharedPref.getInt("theme",-1)==1){
+            //linearLayout.setBackgroundColor(dark.getItem());
+            holder.layoutNote.setBackgroundResource(R.drawable.search_background);
+            holder.subtitle.setTextColor(MainActivity.light.text_color);
+            holder.time.setTextColor(MainActivity.light.text_color);
+            holder.title.setTextColor(MainActivity.light.text_color);
+
+        }else if (sharedPref.getInt("theme",-1)==2){//go to light
+            holder.layoutNote.setBackgroundResource(R.drawable.search_background_dark);
+            holder.subtitle.setTextColor(MainActivity.dark.text_color);
+            holder.time.setTextColor(MainActivity.dark.text_color);
+            holder.title.setTextColor(MainActivity.dark.text_color);
+
+        }
         holder.set_note(notes.get(position));
         holder.layoutNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +62,13 @@ public class adapter extends RecyclerView.Adapter<adapter.holder> {
                 Activity activity = (Activity) view.getContext();
                 activity.finish();
                 view.getContext().startActivity(intent);
+            }
+        });
+        holder.layoutNote.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(view.getContext(), "delete", Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
         Log.i("fdfdfd",position+"");
@@ -83,6 +108,7 @@ public class adapter extends RecyclerView.Adapter<adapter.holder> {
             time = itemView.findViewById(R.id.textDateTime);
             imageView = itemView.findViewById(R.id.image);
             layoutNote = itemView.findViewById(R.id.layoutNote);
+
         }
         void set_note(note_modle note){
             title.setText(note.getTitle());

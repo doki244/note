@@ -1,7 +1,10 @@
 package com.example.note_paad;
 
+import static com.example.note_paad.CreatNoteActivity.notemodle;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,8 +20,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 
 
@@ -40,7 +45,8 @@ public class show_note  extends AppCompatActivity {
     private ImageView add_image;
     private TextView min_view;
     private TextView sec_view;
-
+    private ImageView remove_img;
+    private ImageView remove_draw;
     LinearLayout linearLayout ;
     public static Bitmap img;
     //View view ;
@@ -64,14 +70,20 @@ public class show_note  extends AppCompatActivity {
         title.setEnabled(false);
         mic_open = findViewById(R.id.mic);
         //view = findViewById(R.id.view);
-        ImageView save = findViewById(R.id.imageSave);
+        ImageView edit = findViewById(R.id.imageSave);
+        edit.setTag("edit");
         image = findViewById(R.id.image);
         draw = findViewById(R.id.drawi);
         drawing = findViewById(R.id.draw);
         drawing.setVisibility(View.GONE);
         add_image = findViewById(R.id.add_image);
         add_image.setVisibility(View.GONE);
-        save.setVisibility(View.GONE);
+        remove_img = findViewById(R.id.remove_img);
+        remove_draw = findViewById(R.id.remove_draw);
+        remove_img.setVisibility(View.GONE);
+        remove_draw.setVisibility(View.GONE);
+        //save.setVisibility(View.GONE);
+        edit.setImageResource(R.drawable.edit);
         drawing.setVisibility(View.GONE);
         mic_control = findViewById(R.id.mic_control);
         linearLayout = findViewById(R.id.LinearLayout);
@@ -97,7 +109,6 @@ public class show_note  extends AppCompatActivity {
                 mic_control.setVisibility(View.VISIBLE);
             }
         });
-        mic_play.setImageResource(R.drawable.ic_play);
 
         Bundle extraas = getIntent().getExtras();
         try {
@@ -114,6 +125,22 @@ public class show_note  extends AppCompatActivity {
         if (note==null){
             onBackPressed();
         }
+        mic_play.setImageResource(R.drawable.ic_play);
+
+        edit.setOnClickListener(view -> {
+            Intent intent = new Intent(show_note.this,CreatNoteActivity.class);
+            startActivity(intent);
+            notemodle = note;
+            if (edit.getTag().equals("edit")){
+//                notetext.setEnabled(true);
+//                subtite.setEnabled(true);
+//                title.setEnabled(true);
+//                edit.setTag("");
+            }else
+                //save
+                Toast.makeText(this, "by", Toast.LENGTH_SHORT).show();
+
+        });
         mFileName = note.getVoice_path();
 
         if (mFileName==null){
@@ -225,6 +252,22 @@ public class show_note  extends AppCompatActivity {
         }
         if (note.getDraw()!=null&&note.getImage()!=null){
             //view.setVisibility(View.VISIBLE);
+        }
+        CoordinatorLayout CoordinatorLayout = findViewById(R.id.coordinator);
+
+        if (MainActivity.curent_theme==MainActivity.light_theme){
+            //linearLayout.setBackgroundColor(dark.getItem());
+            CoordinatorLayout.setBackgroundColor(MainActivity.light.getCreat_background());
+            title.setTextColor(MainActivity.light.text_color);
+            notetext.setTextColor(MainActivity.light.text_color);
+            subtite.setTextColor(MainActivity.light.text_color);
+
+        }else if (MainActivity.curent_theme==MainActivity.dark_theme){//go to light
+            CoordinatorLayout.setBackgroundColor(MainActivity.dark.getCreat_background());
+            title.setTextColor(MainActivity.dark.text_color);
+            notetext.setTextColor(MainActivity.dark.text_color);
+            subtite.setTextColor(MainActivity.dark.text_color);
+
         }
 
     }

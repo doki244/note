@@ -24,7 +24,7 @@
         <TextView android:id="@+id/min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10"
+            android:text="00"
             android:layout_centerVertical="true"
             android:textSize="@dimen/_15ssp"
             android:textAlignment="center"
@@ -37,7 +37,10 @@
             android:layout_toEndOf="@id/min"
             android:text=":"
             android:layout_weight="1" android:textSize="@dimen/_15ssp" android:textAlignment="center" android:textColor="#500F0F"/>
-        <TextView android:id="@+id/second" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toEndOf="@id/bb" android:text="10" android:layout_weight="1" android:layout_centerVertical="true" android:textSize="@dimen/_15ssp" android:textAlignment="center" android:textColor="#500F0F"/>
+        <TextView android:id="@+id/second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/bb" android:text="00" android:layout_weight="1" android:layout_centerVertical="true" android:textSize="@dimen/_15ssp" android:textAlignment="center" android:textColor="#500F0F"/>
     </LinearLayout>
     <ImageView android:id="@+id/close" android:layout_width="@dimen/_30sdp" android:layout_height="@dimen/_30sdp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_marginEnd="@dimen/_5sdp" android:src="@drawable/ic_close"/>
 </RelativeLayout>

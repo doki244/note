@@ -8,7 +8,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorPrimery">#292929</color>
+    <color name="colorPrimery">#b5b49e</color>
+    <color name="colorPrimery_creat">#EEE3CC</color>
     <color name="colorPrimeryDark">#292929</color>
     <color name="colorAccent">#fdbe3b</color>
     <color name="colorWhite">#FFFFFF</color>
@@ -17,7 +18,8 @@
     <color name="colorQuickActionsBackground">#2F2D2E</color>
     <color name="colorIcons">#A4A4A4</color>
     <color name="colorTextSubtitle">#CECECE</color>
-    <color name="colorDefaultNoteColor">#333333</color>
+    <color name="colorDefaultNoteColor">#9a8971</color>
+    <color name="colorDefaultNoteColor_dark">#333333</color>
     <color name="colorNoteSubtitleText">#FAFAFA</color>
     <color name="colorMiscellaneousBackground">#1F1F1F</color>
     <color name="yellow">#FDBE3B</color>
