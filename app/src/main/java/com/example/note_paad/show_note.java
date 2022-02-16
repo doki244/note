@@ -139,8 +139,9 @@ public class show_note  extends AppCompatActivity {
             }else
                 //save
                 Toast.makeText(this, "by", Toast.LENGTH_SHORT).show();
-
+            finish();
         });
+
         mFileName = note.getVoice_path();
 
         if (mFileName==null){
