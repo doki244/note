@@ -10,7 +10,7 @@ import java.sql.Blob;
 
 public class DB extends SQLiteOpenHelper {
     public static final String DB_NAME = "note.db";
-    public static final int DB_VERSION =6;
+    public static final int DB_VERSION =7;
 
     public static final String TABLE_NOTE = "notes";
     public static final String ID = "id";
@@ -34,7 +34,7 @@ public class DB extends SQLiteOpenHelper {
                 DRAW + " BLOB , " +
                 IMG + " BLOB , " +
                 SUBTITLE + " TEXT , " +
-                TIME + " TEXT NOT NULL UNIQUE , " +
+                TIME + " TEXT NOT NULL , " +
                 TEXT + " TEXT , " +
                 VOICE_PATH + " TEXT )";
 

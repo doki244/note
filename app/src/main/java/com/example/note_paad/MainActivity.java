@@ -34,7 +34,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     NoteDataAccess access = new NoteDataAccess(this);
-    private RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
     private TextView inputSearch;
     private ImageView theme;
     private LinearLayout layoutSearch;

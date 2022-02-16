@@ -1,7 +1,11 @@
 package com.example.note_paad;
 
+import static com.example.note_paad.MainActivity.recyclerView;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -18,13 +22,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import dev.shreyaspatil.MaterialDialog.MaterialDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class adapter extends RecyclerView.Adapter<adapter.holder> {
     private ArrayList<note_modle> notes;
 
-
+    MaterialDialog mDialog;
     public adapter(ArrayList<note_modle> notes) {
         this.notes = notes;
     }
@@ -67,7 +73,35 @@ public class adapter extends RecyclerView.Adapter<adapter.holder> {
         holder.layoutNote.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Toast.makeText(view.getContext(), "delete", Toast.LENGTH_SHORT).show();
+                mDialog = new MaterialDialog.Builder(((Activity)view.getContext()))
+                        .setTitle("Delete...!")
+                        .setMessage("Are you sure?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new MaterialDialog.OnClickListener() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                                NoteDataAccess access = new NoteDataAccess(view.getContext());
+                                access.openDB();
+                                access.deleteBYid(notes.get(position).getId()+"");
+                                notes = access.getall();
+                                access.closeDB();
+                                notifyDataSetChanged();
+                                //n_();
+
+                                //recyclerView.setAdapter(new adapter(note_searched));
+                                dialogInterface.dismiss();
+                            }
+
+                        }).setNegativeButton("No",  new MaterialDialog.OnClickListener() {
+                            @Override
+                            public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .build();
+                mDialog.show();
+
                 return false;
             }
         });
