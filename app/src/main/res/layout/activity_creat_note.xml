@@ -175,7 +175,9 @@
                     <ImageView
                         android:id="@+id/image"
                         android:layout_width="wrap_content"
+                        android:minWidth="@dimen/_1sdp"
                         android:layout_height="@dimen/_200sdp"
+                        android:minHeight="@dimen/_1sdp"
                         android:adjustViewBounds="true"
                         android:src="@drawable/draw"
                         android:layout_weight="1"
@@ -201,7 +203,8 @@
                         android:id="@+id/drawi"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_200sdp"
-
+                        android:minHeight="@dimen/_1sdp"
+                        android:minWidth="@dimen/_1sdp"
                         android:background="@color/white"
                         android:adjustViewBounds="true"
                         android:src="@drawable/draw"

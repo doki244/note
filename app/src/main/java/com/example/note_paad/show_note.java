@@ -43,6 +43,7 @@ public class show_note  extends AppCompatActivity {
     private ImageView draw;
     private ImageView drawing;
     private ImageView add_image;
+    CountDownTimer  countDownTimer;
     private TextView min_view;
     private TextView sec_view;
     private ImageView remove_img;
@@ -147,6 +148,7 @@ public class show_note  extends AppCompatActivity {
         if (mFileName==null){
             mic_open.setVisibility(View.GONE);
         }else {
+
             recorder =new AudioRecorder(mFileName);
             dur = recorder.during(mFileName);
             int min = (int) TimeUnit.MILLISECONDS.toMinutes(dur);
@@ -166,7 +168,7 @@ public class show_note  extends AppCompatActivity {
                 try {
 
                     recorder.playarcoding(mFileName);
-                    new CountDownTimer(dur, 1000) {
+                    countDownTimer = new CountDownTimer(dur, 1000) {
 
                         public void onTick(long millisUntilFinished) {
                             int min = (int) TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
@@ -204,7 +206,8 @@ public class show_note  extends AppCompatActivity {
                 mic_play.setVisibility(View.VISIBLE);
                 mic_control.setVisibility(View.GONE);
                 recorder.stoparcoding();
-                recorder=null;
+                countDownTimer.cancel();
+                //recorder=null;
 
             }
         });
@@ -214,8 +217,15 @@ public class show_note  extends AppCompatActivity {
                 mic_stop.setVisibility(View.GONE);
                 mic_play.setVisibility(View.VISIBLE);
                 mic_control.setVisibility(View.GONE);
-                if (recorder!=null)
-                    recorder.stoparcoding();
+                if (recorder!=null) {
+                    try {
+                        recorder.stoparcoding();
+                        countDownTimer.cancel();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
             }
         });
 

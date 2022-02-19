@@ -10,8 +10,13 @@ import java.util.concurrent.TimeUnit;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 
 public class AudioRecorder {
@@ -31,8 +36,8 @@ public class AudioRecorder {
         if (!path.contains(".")) {
             path += ".3gp";
         }
-        return Environment.getExternalStorageDirectory().getAbsolutePath()
-                + path;
+            return MainActivity.c.getExternalFilesDir(null).getAbsolutePath()
+                    + path;
     }
 
     public String start() throws IOException {

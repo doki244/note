@@ -1,5 +1,7 @@
 package com.example.note_paad;
 
+import static android.os.Build.VERSION.SDK_INT;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -18,12 +20,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -74,7 +78,7 @@ public class CreatNoteActivity extends AppCompatActivity {
     private int progressBarStatus;
     RelativeLayout mic_control;
     AudioRecorder recorder;
-    String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+    String mFileName ;
     Boolean flag =false;
     NoteDataAccess access = new NoteDataAccess(this);
     @Override
@@ -82,7 +86,7 @@ public class CreatNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creat_note);
 
-
+        //requestPermission();
         ImageView ImageView = findViewById(R.id.imageBack);
         ImageView.setOnClickListener(view -> onBackPressed());
         title = findViewById(R.id.inputNoteTitle);
@@ -113,7 +117,7 @@ public class CreatNoteActivity extends AppCompatActivity {
         time = findViewById(R.id.textDateTime);
         mic_control.setVisibility(View.GONE);
         mic_stop.setVisibility(View.GONE);
-                if (notemodle!=null){
+        if (notemodle!=null){
             mFileName = notemodle.getVoice_path();
 
             if (mFileName==null){
@@ -147,12 +151,12 @@ public class CreatNoteActivity extends AppCompatActivity {
             }
         }
         ActivityCompat.requestPermissions(CreatNoteActivity.this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE,},
                 1);
 
         String time_str = new SimpleDateFormat("EEEE,  dd MMMM yyyy HH:mm a", Locale.getDefault()).format(new Date());
         time.setText(time_str);
-        mFileName+="/"+"notepad-"+time_str+".3gp";
+        mFileName="notepad-"+time_str+".3gp";
 
         ImageView save = findViewById(R.id.imageSave);
         save.setOnClickListener(new View.OnClickListener() {
@@ -226,8 +230,9 @@ public class CreatNoteActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(view.getContext(),draw.class);
+
+            //setProgressBar();
             startActivity(intent);
-            setProgressBar();
         }
     });
         add_img.setOnClickListener(new View.OnClickListener() {
@@ -353,6 +358,23 @@ public class CreatNoteActivity extends AppCompatActivity {
         finish();
 
     }
+    private void requestPermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
+                startActivityForResult(intent, 2296);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, 2296);
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(CreatNoteActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2296);
+        }
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -418,6 +440,15 @@ public class CreatNoteActivity extends AppCompatActivity {
                 remove_img.setVisibility(View.VISIBLE);
                 LinearLayout.setVisibility(View.VISIBLE);
                 image.setVisibility(View.VISIBLE);
+            }
+        }
+        if (requestCode == 2296) {
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    // perform action when allow permission success
+                } else {
+                    Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

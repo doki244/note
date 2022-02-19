@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -34,6 +36,13 @@ public class draw extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, 1000);
+        Log.i("7777777", "onCreate: ");
         mDrawView = (DrawView) findViewById(R.id.draw_view);
         back =  findViewById(R.id.imageBack);
         done =  findViewById(R.id.done);
@@ -45,37 +54,39 @@ public class draw extends AppCompatActivity {
         yellow = findViewById(R.id.yellow);
         purple = findViewById(R.id.purple);
         mDrawView.setDrawColor(Color.BLACK);
+
 //        Bitmap background = ((BitmapDrawable)getResources().getDrawable(R.drawable.white)).getBitmap();
 //        mDrawView.setBackgroundImage(background, BackgroundType.BITMAP, BackgroundScale.CENTER_CROP);
-        //mDrawView.setDrawWidth(20);
-
-        mDrawView.setOnDrawViewListener(new DrawView.OnDrawViewListener() {
-            @Override
-            public void onStartDrawing() {
-                // Your stuff here
-            }
-
-            @Override
-            public void onEndDrawing() {
+//        mDrawView.setDrawWidth(20);
 
 
-            }
-
-            @Override
-            public void onClearDrawing() {
-                // Your stuff here
-            }
-
-            @Override
-            public void onRequestText() {
-                // Your stuff here
-            }
-
-            @Override
-            public void onAllMovesPainted() {
-                // Your stuff here
-            }
-        });
+//        mDrawView.setOnDrawViewListener(new DrawView.OnDrawViewListener() {
+//            @Override
+//            public void onStartDrawing() {
+//                // Your stuff here
+//            }
+//
+//            @Override
+//            public void onEndDrawing() {
+//
+//
+//            }
+//
+//            @Override
+//            public void onClearDrawing() {
+//                // Your stuff here
+//            }
+//
+//            @Override
+//            public void onRequestText() {
+//                // Your stuff here
+//            }
+//
+//            @Override
+//            public void onAllMovesPainted() {
+//                // Your stuff here
+//            }
+//        });
         done.setOnClickListener(view -> {
             Object[] createCaptureResponse = mDrawView.createCapture(DrawingCapture.BYTES);
             draw = (byte[]) createCaptureResponse[0];
@@ -94,7 +105,7 @@ public class draw extends AppCompatActivity {
         redo.setOnClickListener(view -> {
             if (mDrawView.canRedo())
                 mDrawView.redo();
-        });
+       });
 
     }
     @Override
@@ -103,26 +114,6 @@ public class draw extends AppCompatActivity {
         finish();
 
     }
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = null;
 
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
 
 }

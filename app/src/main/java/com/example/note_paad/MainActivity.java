@@ -50,11 +50,14 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton add_btn;
     public static ArrayList<note_modle> notes;
     adapter ada ;
+    static Context c;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_main);
+        c  = getApplicationContext();
         add_btn= findViewById(R.id.fab);
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         theme = findViewById(R.id.theme);
