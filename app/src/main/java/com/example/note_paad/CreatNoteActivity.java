@@ -73,7 +73,7 @@ public class CreatNoteActivity extends AppCompatActivity {
     private Bitmap thumbnail;
     private Handler progressBarbHandler = new Handler();
     private ImageView drawing;
-
+Bitmap bitmap_a;
     private LinearLayout LinearLayout;
     private int progressBarStatus;
     RelativeLayout mic_control;
@@ -134,11 +134,13 @@ public class CreatNoteActivity extends AppCompatActivity {
                 LinearLayout.setVisibility(View.VISIBLE);
                 image.setVisibility(View.VISIBLE);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(notemodle.getImage(), 0, notemodle.getImage().length);
+                bitmap_a= bitmap;
                 image.setImageBitmap(bitmap);
                 remove_img.setVisibility(View.VISIBLE);
 
             }
             if (notemodle.getDraw()!=null){
+                draw.draw=notemodle.getDraw();
                 LinearLayout.setVisibility(View.VISIBLE);
                 drawi.setVisibility(View.VISIBLE);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(notemodle.getDraw(), 0, notemodle.getDraw().length);
@@ -329,9 +331,13 @@ public class CreatNoteActivity extends AppCompatActivity {
         try {
             if (image.getVisibility()==View.VISIBLE){
                 Bitmap bitmap = image.getDrawingCache();
+                if (bitmap==null){
+                    bitmap = bitmap_a;
+                }
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
                 imagee = baos.toByteArray();
+                Log.i("tretyetyety", "save: "+imagee);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -340,12 +346,19 @@ public class CreatNoteActivity extends AppCompatActivity {
         access.openDB();
         if (notemodle!=null){
             access.deleteBYid(notemodle.getId()+"");
+            //access.addNewNote(new note_modle(mFileName,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
+            if (flag)
+                access.addNewNote(new note_modle(mFileName,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
+            else
+                access.addNewNote(new note_modle(null,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
+        }else{
+            if (flag)
+                access.addNewNote(new note_modle(mFileName,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
+            else
+                access.addNewNote(new note_modle(null,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
         }
-        if (flag)
-            access.addNewNote(new note_modle(mFileName,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
-        else
-            access.addNewNote(new note_modle(null,notetext.getText().toString(),time.getText().toString(),title.getText().toString(),subtite.getText().toString(),imagee,draw.draw));
         access.closeDB();
+        draw.draw=null;
         return true;
     }
 
@@ -504,6 +517,7 @@ public class CreatNoteActivity extends AppCompatActivity {
     }
 
     public void stop() {
+
         customHandler.removeCallbacks(updateTimerThread);
     }
 
